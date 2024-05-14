@@ -1,0 +1,12 @@
+body {
+    display: flex;
+}
+
+.calculator-border {
+    border-style: solid;
+    border-color: rgb(97, 97, 97);
+    border-width: 5px;
+    min-width: 250px;
+    min-height: 300px;
+
+}
