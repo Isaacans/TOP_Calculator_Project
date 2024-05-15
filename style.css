@@ -1,12 +1,23 @@
-body {
+.calculator-container {
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    min-width: 250px;
 }
 
 .calculator-border {
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 1auto;
     border-style: solid;
     border-color: rgb(97, 97, 97);
     border-width: 5px;
-    min-width: 250px;
+    max-width: 400px;
     min-height: 300px;
+}
 
+button {
+    flex: 1 0 25%;
 }
