@@ -25,11 +25,11 @@ button {
     font-size: 1.5em;
 }
 
-#calc-screen {
+.calc-screen {
     border: solid;
     border-color:black;
     border-width: 2px;
-
+    direction: rtl;
     flex: 1 1 99%;
     font-size: 2.5em;
     font-weight: bold;
