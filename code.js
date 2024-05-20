@@ -3,7 +3,6 @@ let calcInputString = "";
 const calcScreen = document.getElementById('calculator_screen');
 const calcBorder = document.getElementById('calculator_border');
 const buttons = document.querySelectorAll('button');
-const button_1 = document.getElementById('one')
 
 calcBorder.addEventListener("click", (clickEvent) => {
     processButton(clickEvent.target.id);
@@ -77,12 +76,14 @@ function updateScreen() {
 };
 
 function updateInputString(input) {
-    if (input === 'backspace'){
+    if (input === 'backspace' && calcInputString.length > 1){ // The calcInputString length check allows the next else if statement... 
         calcInputString = calcInputString.slice(0, -1);
+    } else if (input === 'backspace' && calcInputString != '-') { // ...to ensure the negative number sign is not taken away  
+        calcInputString = calcInputString.slice(0, -1);     
     } else if (input === 'AC'){
         calcInputString = '';
         isPositive = true; // To reset variable to default positive.
-    } else if (calcInputString.length <= 15) {
+    } else if (calcInputString.length <= 15 && typeof(input) === 'number') {
         calcInputString += input;
     };
 };
@@ -96,4 +97,3 @@ function flipPositivity() {
         isPositive = true;
     };
 };
-
