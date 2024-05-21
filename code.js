@@ -98,9 +98,9 @@ function updateInputString(buttonInput) {
         isPositive = true; // To reset variable to default positive.
 
     } else if (calcInputString.length <= 15 && typeof(buttonInput) === 'number') {
-        if (calcInputString.charAt(0) === '0' && calcInputString.charAt(1) !== '.') {
+        if (calcInputString.charAt(0) === '0' && calcInputString.charAt(1) === '') {
             calcInputString = buttonInput.toString();
-        } else if (calcInputString.charAt(0) === '-' && calcInputString.charAt(1) === '0') {
+        } else if (calcInputString.charAt(0) === '-' && calcInputString.charAt(1) === '0' && calcInputString.charAt(2) === '') {
             calcInputString = '-' + buttonInput.toString();
         } else {
             calcInputString += buttonInput;
