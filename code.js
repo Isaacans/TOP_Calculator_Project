@@ -80,14 +80,19 @@ function updateScreen() {
 
 function updateInputString(buttonInput) {
     if (buttonInput === 'backspace') { 
-        if (calcInputString.length > 1) { // Checks to prevent 0 and '-' being removed
+        if (calcInputString.length === 2) {
+            if (calcInputString.search('-') === -1) {
+                calcInputString = calcInputString.slice(0, -1);
+            } else {
+                calcInputString = '0';
+                isPositive = true;
+            };
+        } else if (calcInputString.length > 1) { // Checks to prevent 0 and '-' being removed
             calcInputString = calcInputString.slice(0, -1);
-        } else if (calcInputString === '-' || calcInputString === '0') {
-            return;
         } else {
             calcInputString = '0';
         };
-    
+
     } else if (buttonInput === 'AC'){
         calcInputString = '0';
         isPositive = true; // To reset variable to default positive.
