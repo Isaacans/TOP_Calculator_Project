@@ -1,5 +1,5 @@
 let isPositive = true;
-let calcInputString = "";
+let calcInputString = "0";
 const calcScreen = document.getElementById('calculator_screen');
 const calcBorder = document.getElementById('calculator_border');
 const buttons = document.querySelectorAll('button');
@@ -9,6 +9,9 @@ calcBorder.addEventListener("click", (clickEvent) => {
     updateScreen();
 });
 
+console.log(parseFloat("10"));
+console.log(parseFloat("10.11"));
+console.log(parseFloat("-10"));
 function processButton(id) {
     switch(id) {
         case 'one':
@@ -50,6 +53,9 @@ function processButton(id) {
         case 'backspace':
             updateInputString('backspace');
             break;    
+        case 'decimal_point':
+            updateInputString('decimal_point');
+            break;
         case 'divide':
             console.log(id);
             break;    
@@ -65,9 +71,6 @@ function processButton(id) {
         case 'equals':
             console.log(id);
             break;    
-        case 'decimal_point':
-            console.log(id);
-            break;
     };
 };
 
@@ -75,21 +78,43 @@ function updateScreen() {
         calcScreen.textContent = calcInputString;
 };
 
-function updateInputString(input) {
-    if (input === 'backspace' && calcInputString.length > 1){ // The calcInputString length check allows the next else if statement... 
-        calcInputString = calcInputString.slice(0, -1);
-    } else if (input === 'backspace' && calcInputString != '-') { // ...to ensure the negative number sign is not taken away  
-        calcInputString = calcInputString.slice(0, -1);     
-    } else if (input === 'AC'){
-        calcInputString = '';
+function updateInputString(buttonInput) {
+    if (buttonInput === 'backspace') { 
+        if (calcInputString.length > 1) { // Checks to prevent 0 and '-' being removed
+            calcInputString = calcInputString.slice(0, -1);
+        } else if (calcInputString === '-' || calcInputString === '0') {
+            return;
+        } else {
+            calcInputString = '0';
+        };
+    
+    } else if (buttonInput === 'AC'){
+        calcInputString = '0';
         isPositive = true; // To reset variable to default positive.
-    } else if (calcInputString.length <= 15 && typeof(input) === 'number') {
-        calcInputString += input;
+
+    } else if (calcInputString.length <= 15 && typeof(buttonInput) === 'number') {
+        if (calcInputString.charAt(0) === '0') {
+            calcInputString = buttonInput.toString();
+        } else if (calcInputString.charAt(0) === '-' && calcInputString.charAt(1) === '0') {
+            calcInputString = '-' + buttonInput.toString();
+        } else {
+            calcInputString += buttonInput;
+        };
+
+    } else if (buttonInput === 'decimal_point') {
+        if (calcInputString.length === 0){
+            calcInputString += '0.';
+        } else if (calcInputString.length === 1 && calcInputString.search('-') === -1) {
+            calcInputString += '.';
+        } else if (calcInputString.search('.') === -1) {
+            calcInputString += '.';
+        };
+        calcInputString += '.';
     };
 };
 
 function flipPositivity() {
-    if (isPositive === true) {
+    if (isPositive === true && calcInputString !== '0') {
         calcInputString = '-' + calcInputString;
         isPositive = false;
     } else if (isPositive === false) {
