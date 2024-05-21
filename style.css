@@ -11,12 +11,12 @@
 #calculator_border {
     display: flex;
     flex-wrap: wrap;
-
     border-style: solid;
     border-color: rgb(97, 97, 97);
     border-width: 4px;
     max-width: 375px;
-    min-height: 300px;
+    min-height: 400px;
+    margin: 30px;
     padding: 1px;
 }
 
