@@ -1,5 +1,10 @@
 let isPositive = true;
+let secondEquationTerm = false;
 let calcInputString = "0";
+let equationTermA;
+let equationTermB;
+let equationOperator;
+;
 const calcScreen = document.getElementById('calculator_screen');
 const calcBorder = document.getElementById('calculator_border');
 const buttons = document.querySelectorAll('button');
@@ -9,9 +14,6 @@ calcBorder.addEventListener("click", (clickEvent) => {
     updateScreen();
 });
 
-console.log(parseFloat("10"));
-console.log(parseFloat("10.11"));
-console.log(parseFloat("-10"));
 function processInput(id) {
     switch(id) {
         case 'one':
@@ -57,24 +59,23 @@ function processInput(id) {
             updateInputString('decimal_point');
             break;
         case 'divide':
-            console.log(id);
-            break;    
         case 'times':
-            console.log(id);
-            break;    
-        case 'minus':
-            console.log(id);
-            break;    
+        case 'minus': 
         case 'plus':
-            console.log(id);
+            handleOperand(id);
             break;    
         case 'equals':
-            console.log(id);
+            equationTermB = parseFloat(calcInputString);
+            calcInputString = calculateEquation();
             break;    
     };
 };
 
 function updateScreen() {
+    if (secondEquationTerm === true) {
+        secondEquationTerm = false;
+        return;
+    }
         calcScreen.textContent = calcInputString;
 };
 
@@ -119,4 +120,24 @@ function flipPositivity() {
         isPositive = true;
         calcInputString = calcInputString.replace('-', '');
     };
+};
+
+function calculateEquation() {
+    switch(equationOperator) {
+        case 'divide':
+            return (equationTermA / equationTermB).toString();
+        case 'times':
+            return (equationTermA * equationTermB).toString();
+        case 'minus':
+            return (equationTermA - equationTermB).toString();
+        case 'plus':
+            return (equationTermA + equationTermB).toString();
+    };
+};
+
+function handleOperand(operatorType) {
+    equationTermA = parseFloat(calcInputString);
+    equationOperator = operatorType;
+    secondEquationTerm = true;
+    calcInputString = '0';
 };

@@ -4,7 +4,6 @@
     justify-content: center;
     align-items: center;
     height: 600px;
-    min-width: 250px;
 
 }
 
@@ -12,12 +11,14 @@
     display: flex;
     flex-wrap: wrap;
     border-style: solid;
-    border-color: rgb(97, 97, 97);
-    border-width: 4px;
-    max-width: 375px;
+    border-color: rgb(35, 31, 44);
+    border-width: 6px;
     min-height: 400px;
+    min-width: 300px;
+    max-width: 380px;
     margin: 30px;
-    padding: 1px;
+    padding: 4px;
+    background-color: rgb(222, 226, 226);
 }
 
 button {
@@ -25,10 +26,17 @@ button {
     font-size: 1.5em;
 }
 
+button.number {
+    background-color: rgb(132, 168, 223);
+}
+
+button.operator {
+    background-color: rgb(62, 131, 187);
+}
+
 #calculator_screen {
     flex: 1 0 99%;
     min-height: 16%;
-    max-width: 371px;
     border: solid;
     border-color:black;
     border-width: 2px;
