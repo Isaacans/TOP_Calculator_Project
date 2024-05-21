@@ -81,7 +81,7 @@ function updateScreen() {
 function updateInputString(buttonInput) {
     if (buttonInput === 'backspace') { 
         if (calcInputString.length === 2) {
-            if (calcInputString.search('-') === -1) {
+            if (calcInputString.indexOf('-') === -1) {
                 calcInputString = calcInputString.slice(0, -1);
             } else {
                 calcInputString = '0';
@@ -98,7 +98,7 @@ function updateInputString(buttonInput) {
         isPositive = true; // To reset variable to default positive.
 
     } else if (calcInputString.length <= 15 && typeof(buttonInput) === 'number') {
-        if (calcInputString.charAt(0) === '0') {
+        if (calcInputString.charAt(0) === '0' && calcInputString.charAt(1) !== '.') {
             calcInputString = buttonInput.toString();
         } else if (calcInputString.charAt(0) === '-' && calcInputString.charAt(1) === '0') {
             calcInputString = '-' + buttonInput.toString();
@@ -106,24 +106,17 @@ function updateInputString(buttonInput) {
             calcInputString += buttonInput;
         };
 
-    } else if (buttonInput === 'decimal_point') {
-        if (calcInputString.length === 0){
-            calcInputString += '0.';
-        } else if (calcInputString.length === 1 && calcInputString.search('-') === -1) {
-            calcInputString += '.';
-        } else if (calcInputString.search('.') === -1) {
-            calcInputString += '.';
-        };
+    } else if (buttonInput === 'decimal_point' && calcInputString.indexOf('.') === -1) {
         calcInputString += '.';
     };
 };
 
 function flipPositivity() {
-    if (isPositive === true && calcInputString !== '0') {
-        calcInputString = '-' + calcInputString;
+    if (isPositive === true) {
         isPositive = false;
+        calcInputString = '-' + calcInputString;
     } else if (isPositive === false) {
-        calcInputString = calcInputString.replace('-', '');
         isPositive = true;
+        calcInputString = calcInputString.replace('-', '');
     };
 };
