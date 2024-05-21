@@ -5,14 +5,14 @@ const calcBorder = document.getElementById('calculator_border');
 const buttons = document.querySelectorAll('button');
 
 calcBorder.addEventListener("click", (clickEvent) => {
-    processButton(clickEvent.target.id);
+    processInput(clickEvent.target.id);
     updateScreen();
 });
 
 console.log(parseFloat("10"));
 console.log(parseFloat("10.11"));
 console.log(parseFloat("-10"));
-function processButton(id) {
+function processInput(id) {
     switch(id) {
         case 'one':
             updateInputString(1);
@@ -78,8 +78,8 @@ function updateScreen() {
         calcScreen.textContent = calcInputString;
 };
 
-function updateInputString(buttonInput) {
-    if (buttonInput === 'backspace') { 
+function updateInputString(inputSelection) {
+    if (inputSelection === 'backspace') { 
         if (calcInputString.length === 2) {
             if (calcInputString.indexOf('-') === -1) {
                 calcInputString = calcInputString.slice(0, -1);
@@ -93,20 +93,20 @@ function updateInputString(buttonInput) {
             calcInputString = '0';
         };
 
-    } else if (buttonInput === 'AC'){
+    } else if (inputSelection === 'AC'){
         calcInputString = '0';
         isPositive = true; // To reset variable to default positive.
 
-    } else if (calcInputString.length <= 15 && typeof(buttonInput) === 'number') {
+    } else if (calcInputString.length <= 15 && typeof(inputSelection) === 'number') {
         if (calcInputString.charAt(0) === '0' && calcInputString.charAt(1) === '') {
-            calcInputString = buttonInput.toString();
+            calcInputString = inputSelection.toString();
         } else if (calcInputString.charAt(0) === '-' && calcInputString.charAt(1) === '0' && calcInputString.charAt(2) === '') {
-            calcInputString = '-' + buttonInput.toString();
+            calcInputString = '-' + inputSelection.toString();
         } else {
-            calcInputString += buttonInput;
+            calcInputString += inputSelection;
         };
 
-    } else if (buttonInput === 'decimal_point' && calcInputString.indexOf('.') === -1) {
+    } else if (inputSelection === 'decimal_point' && calcInputString.indexOf('.') === -1) {
         calcInputString += '.';
     };
 };
