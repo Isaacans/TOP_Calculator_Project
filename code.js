@@ -71,18 +71,15 @@ function processInput(id) {
     };
 };
 
-
-let calcOutputString;
-
 function updateScreen() {
     if (secondEquationTerm === true) {
         secondEquationTerm = false;
         return;
     }   
-    calcOutputString = parseFloat(calcInputString).toLocaleString('en-NZ', {maximumFractionDigits: 20});
+    let calcOutputString = parseFloat(calcInputString).toLocaleString('en-NZ', {maximumFractionDigits: 20});
     
     // Adds decimal point to end of string as toLocaleString removes this
-    if (calcInputString.endsWith('.')){
+    if (calcInputString.endsWith('.') && !calcOutputString.endsWith('.')){
         calcOutputString += '.';
     };
     
