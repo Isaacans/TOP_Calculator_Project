@@ -37,6 +37,7 @@ button.operator {
 #calculator_screen {
     flex: 1 0 99%;
     min-height: 16%;
+    max-width: 376px;
     border: solid;
     border-color:black;
     border-width: 2px;
