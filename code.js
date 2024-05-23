@@ -71,12 +71,22 @@ function processInput(id) {
     };
 };
 
+
+let calcOutputString;
+
 function updateScreen() {
     if (secondEquationTerm === true) {
         secondEquationTerm = false;
         return;
-    }
-        calcScreen.textContent = calcInputString;
+    }   
+    calcOutputString = parseFloat(calcInputString).toLocaleString('en-NZ', {maximumFractionDigits: 20});
+    
+    // Adds decimal point to end of string as toLocaleString removes this
+    if (calcInputString.endsWith('.')){
+        calcOutputString += '.';
+    };
+    
+    calcScreen.textContent = calcOutputString;
 };
 
 function updateInputString(inputSelection) {
@@ -140,4 +150,5 @@ function handleOperand(operatorType) {
     equationOperator = operatorType;
     secondEquationTerm = true;
     calcInputString = '0';
+    isPositive = true;
 };
