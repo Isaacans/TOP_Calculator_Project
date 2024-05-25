@@ -6,6 +6,7 @@ let equationTermA = '';
 let equationTermB = '';
 let equationOperator = '';
 let lastOperator = '';
+let equationCompleted = false;
 
 const calcScreen = document.getElementById('calculator_screen');
 const calcBorder = document.getElementById('calculator_border');
@@ -90,6 +91,7 @@ function updateScreen() {
 function updateInputString(inputSelection) {
     if (inputSelection === 'backspace') { 
         // Want backspace to set calc output number to 0 and remove minus sign/number negativity
+        equationCompleted = false;
         if (calcInputString.length === 2) {
             if (calcInputString.indexOf('-') === -1) {
                 calcInputString = calcInputString.slice(0, -1);
@@ -111,6 +113,7 @@ function updateInputString(inputSelection) {
         equationTermB = '';
         equationOperator = '';
         lastOperator = '';
+        equationCompleted = false;
 
     // Update calcInputString when numbers are pressed
     } else if (typeof(inputSelection) === 'number') {
@@ -119,6 +122,12 @@ function updateInputString(inputSelection) {
         };
         if (secondEquationTerm === true) {
             calcInputString = inputSelection.toString();
+            secondEquationTerm = false;
+            equationCompleted === false
+            return;
+        } else if (equationCompleted === true) {
+            calcInputString = inputSelection.toString();
+            equationCompleted === false
             secondEquationTerm = false;
             return;
         };
@@ -166,12 +175,14 @@ function calculateEquation() {
 };
 
 function processOperandInput(operatorType) {
+    secondEquationTerm = true;
     if (equationTermA && !equationTermB) {
         processEqualsInput();
+        equationOperator = operatorType;
+        equationTermB = '';
         return;
     };
     equationOperator = operatorType;
-    secondEquationTerm = true;
     equationTermA = parseFloat(calcInputString);
     equationTermB = '';
 };
@@ -185,4 +196,6 @@ function processEqualsInput() {
         calcInputString = outcome.toString();
         equationTermA = parseFloat(calcInputString);
     };    
+    equationCompleted = true;
+    
 };
