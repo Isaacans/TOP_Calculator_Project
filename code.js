@@ -7,6 +7,7 @@ let equationTermB = '';
 let equationOperator = '';
 let lastOperator = '';
 let equationCompleted = false;
+const maxInputStringLength = 13;
 
 const calcScreen = document.getElementById('calculator_screen');
 const calcBorder = document.getElementById('calculator_border');
@@ -76,15 +77,15 @@ function processUserInput(id) {
 function updateScreen() {
     if (secondEquationTerm === true) {
         return;
-    }   
+    };   
 
-    calcOutputString = parseFloat(calcInputString).toLocaleString('en-NZ', {maximumFractionDigits: 20});
-
-    // Adds decimal point to end of string as toLocaleString removes this
-    if (calcInputString.endsWith('.') && !calcOutputString.endsWith('.')){
-        calcOutputString += '.';
-    };
+    calcOutputString = parseInt(calcInputString).toLocaleString('en-US', {maximumFractionDigits: 20});
     
+    // Adds decimal point, & 0s after it, as toLocalString removes these
+    if (calcInputString.includes('.')){
+        calcOutputString += calcInputString.slice(calcInputString.indexOf('.'));
+    };
+
     calcScreen.textContent = calcOutputString;
 };
 
@@ -117,17 +118,17 @@ function updateInputString(inputSelection) {
 
     // Update calcInputString when numbers are pressed
     } else if (typeof(inputSelection) === 'number') {
-        if (calcInputString.length >= 15) {
+        if (calcInputString.length >= maxInputStringLength) {
             return;
         };
         if (secondEquationTerm === true) {
             calcInputString = inputSelection.toString();
+            equationCompleted = false
             secondEquationTerm = false;
-            equationCompleted === false
             return;
         } else if (equationCompleted === true) {
             calcInputString = inputSelection.toString();
-            equationCompleted === false
+            equationCompleted = false
             secondEquationTerm = false;
             return;
         };
@@ -139,7 +140,10 @@ function updateInputString(inputSelection) {
             calcInputString += inputSelection;
         };
 
-    } else if (inputSelection === 'decimal_point' && calcInputString.indexOf('.') === -1) {
+    } else if (inputSelection === 'decimal_point') {
+        if (calcInputString.length >= maxInputStringLength || calcInputString.indexOf('.') !== -1) {
+            return;
+        };
         calcInputString += '.';
     };
 };
@@ -175,13 +179,19 @@ function calculateEquation() {
 };
 
 function processOperandInput(operatorType) {
-    secondEquationTerm = true;
-    if (equationTermA && !equationTermB) {
+    
+    if (equationTermA && !equationTermB && secondEquationTerm === false ) {
         processEqualsInput();
         equationOperator = operatorType;
         equationTermB = '';
         return;
+    // } else if (equationTermA && !equationTermB && equationCompleted === false) {
+    //     processEqualsInput();
+    //     equationOperator = operatorType;
+    //     equationTermB = '';
+    //     return;
     };
+    secondEquationTerm = true;
     equationOperator = operatorType;
     equationTermA = parseFloat(calcInputString);
     equationTermB = '';
