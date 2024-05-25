@@ -1,13 +1,11 @@
 let isPositive = true;
 let secondEquationTerm = false;
-let calcInputString = "0";
+let calcInputString = '0';
+let calcOutputString = '0';
 let equationTermA = '';
 let equationTermB = '';
 let equationOperator = '';
 let lastOperator = '';
-
-let showClear = false;
-// let equationDone = false;
 
 const calcScreen = document.getElementById('calculator_screen');
 const calcBorder = document.getElementById('calculator_border');
@@ -69,27 +67,17 @@ function processUserInput(id) {
             processOperandInput(id);
             break;    
         case 'equals':
-            equationTermB = parseFloat(calcInputString);
-            calcInputString = calculateEquation();
-            equationTermA = '';
-            equationTermB = '';
-            showClear = true;
+            processEqualsInput();
             break;    
     };
 };
 
 function updateScreen() {
     if (secondEquationTerm === true) {
-        secondEquationTerm = false;
         return;
     }   
 
-    let calcOutputString = parseFloat(calcInputString).toLocaleString('en-NZ', {maximumFractionDigits: 20});
-
-    if (showClear === true) {
-        showClear = false;
-        updateInputString('AC');
-    };
+    calcOutputString = parseFloat(calcInputString).toLocaleString('en-NZ', {maximumFractionDigits: 20});
 
     // Adds decimal point to end of string as toLocaleString removes this
     if (calcInputString.endsWith('.') && !calcOutputString.endsWith('.')){
@@ -100,18 +88,6 @@ function updateScreen() {
 };
 
 function updateInputString(inputSelection) {
-    // Entering number after equal is pressed starts a new equation
-    // if (equationDone === true && typeof(inputSelection) === 'number') {
-    //     if (isPositive) {
-    //         calcInputString = inputSelection.toString();
-    //     } else {
-    //         calcInputString = '-' + inputSelection;
-    //     }
-        
-    //     equationDone = false;
-    //     return;
-    // };
-    
     if (inputSelection === 'backspace') { 
         // Want backspace to set calc output number to 0 and remove minus sign/number negativity
         if (calcInputString.length === 2) {
@@ -128,16 +104,24 @@ function updateInputString(inputSelection) {
         };
 
     } else if (inputSelection === 'AC'){
-        isPositive = true;
+        isPositive = true;// To reset variable to default positive.
         secondEquationTerm = false;
         calcInputString = "0";
         equationTermA = '';
         equationTermB = '';
         equationOperator = '';
         lastOperator = '';
-        isPositive = true; // To reset variable to default positive.
 
-    } else if (calcInputString.length <= 15 && typeof(inputSelection) === 'number') {
+    // Update calcInputString when numbers are pressed
+    } else if (typeof(inputSelection) === 'number') {
+        if (calcInputString.length >= 15) {
+            return;
+        };
+        if (secondEquationTerm === true) {
+            calcInputString = inputSelection.toString();
+            secondEquationTerm = false;
+            return;
+        };
         if (calcInputString.charAt(0) === '0' && calcInputString.charAt(1) === '') {
             calcInputString = inputSelection.toString();
         } else if (calcInputString.charAt(0) === '-' && calcInputString.charAt(1) === '0' && calcInputString.charAt(2) === '') {
@@ -165,36 +149,40 @@ function calculateEquation() {
     let answer;
     switch(equationOperator) {
         case 'divide':
-            answer = (equationTermA / equationTermB).toString();
+            answer = (equationTermA / equationTermB);
             break;
         case 'times':
-            answer = (equationTermA * equationTermB).toString();
+            answer = (equationTermA * equationTermB);
             break;
         case 'minus':
-            answer = (equationTermA - equationTermB).toString();
+            answer = (equationTermA - equationTermB);
             break;
         case 'plus':
-            answer = (equationTermA + equationTermB).toString();
+            answer = (equationTermA + equationTermB);
             break;
     };
-    equationTermA = '';
+    secondEquationTerm = false;
     return answer;
 };
 
 function processOperandInput(operatorType) {
-    if (equationTermA !== '') {
-        equationTermB = parseFloat(calcInputString);
-        equationOperator = operatorType;
-        calcInputString = calculateEquation();
-        secondEquationTerm = true;
+    if (equationTermA && !equationTermB) {
+        processEqualsInput();
         return;
-    } else {
-        lastOperator = operatorType;
     };
-
-    equationTermA = parseFloat(calcInputString);
     equationOperator = operatorType;
     secondEquationTerm = true;
-    calcInputString = '0';
-    isPositive = true;
+    equationTermA = parseFloat(calcInputString);
+    equationTermB = '';
+};
+
+function processEqualsInput() {
+    if (!equationTermB) {
+        equationTermB = parseFloat(calcInputString);
+    };
+    let outcome = calculateEquation();
+    if (typeof(outcome) === 'number') {
+        calcInputString = outcome.toString();
+        equationTermA = parseFloat(calcInputString);
+    };    
 };
