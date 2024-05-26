@@ -184,6 +184,7 @@ function processOperandInput(operatorType) {
         processEqualsInput();
         equationOperator = operatorType;
         equationTermB = '';
+        
         return;
     // } else if (equationTermA && !equationTermB && equationCompleted === false) {
     //     processEqualsInput();
