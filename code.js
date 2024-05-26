@@ -93,6 +93,7 @@ function updateInputString(inputSelection) {
     if (inputSelection === 'backspace') { 
         // Want backspace to set calc output number to 0 and remove minus sign/number negativity
         equationCompleted = false;
+
         if (calcInputString.length === 2) {
             if (calcInputString.indexOf('-') === -1) {
                 calcInputString = calcInputString.slice(0, -1);
@@ -104,6 +105,13 @@ function updateInputString(inputSelection) {
             calcInputString = calcInputString.slice(0, -1);
         } else {
             calcInputString = '0';
+        };
+
+        if (secondEquationTerm) {
+            secondEquationTerm = false;
+            updateScreen();
+            equationTermA = parseFloat(calcInputString);
+            secondEquationTerm = true;
         };
 
     } else if (inputSelection === 'AC'){
@@ -182,9 +190,10 @@ function processOperandInput(operatorType) {
     
     if (equationTermA && !equationTermB && secondEquationTerm === false ) {
         processEqualsInput();
+        updateScreen();
         equationOperator = operatorType;
         equationTermB = '';
-        
+        secondEquationTerm = true;
         return;
     // } else if (equationTermA && !equationTermB && equationCompleted === false) {
     //     processEqualsInput();
