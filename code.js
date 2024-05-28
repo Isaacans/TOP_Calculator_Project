@@ -7,12 +7,14 @@ let equationTermB = '';
 let equationOperator = '';
 let lastOperator = '';
 let equationCompleted = false;
-const maxInputStringLength = 13;
 
+const calcScreenContentMaxLength = 16;
+const calcInputStringMaxLength = calcScreenContentMaxLength + 4;
 const calcScreen = document.getElementById('calculator_screen');
 const calcBorder = document.getElementById('calculator_border');
 const buttons = document.querySelectorAll('button');
 
+// To detect user input via eventListener and calling all functions needed in response
 calcBorder.addEventListener("click", (clickEvent) => {
     processUserInput(clickEvent.target.id);
     updateScreen();
@@ -79,11 +81,79 @@ function updateScreen() {
         return;
     };   
 
-    calcOutputString = parseInt(calcInputString).toLocaleString('en-US', {maximumFractionDigits: 20});
+    // Use toLocaleString to add comma to every thousand
+    calcOutputString = parseInt(calcInputString).toLocaleString();
     
-    // Adds decimal point, & 0s after it, as toLocalString removes these
+    // Adds back the decimal point and any 0s after it, as toLocalString removes these
     if (calcInputString.includes('.')){
         calcOutputString += calcInputString.slice(calcInputString.indexOf('.'));
+    };
+    
+    // Remove minus sign as this should be separate from calcScreenMaxContentLength
+    if (calcOutputString.includes('-')) {
+        calcOutputString = calcOutputString.replace('-', '');
+        console.log('minus removed: ' + calcOutputString)
+    };
+
+    // Limit output length to prevent calc screen overflow
+    if (calcOutputString.length > calcScreenContentMaxLength) {
+        
+        // Reduces the length of longer numbers by rounding the decimal places
+        if (calcOutputString.includes('.') && !calcOutputString.endsWith('.')) {
+            let i = calcOutputString.replace(/,/g, '').slice(calcOutputString.replace(/,/g, '').indexOf('.')).length - 2;
+            
+            console.log('i = ' + i)
+            if (i < 1) {
+                i = 1;
+            };
+
+            while (i > 0 && (calcOutputString.length) > calcScreenContentMaxLength) {
+                console.log('decimal while triggered with: ' + calcOutputString);
+                
+                calcOutputString = calcOutputString.replace(/,/g, '');
+                console.log('first change: ' + calcOutputString);
+                calcOutputString = parseFloat(calcOutputString);
+                calcOutputString = (Math.round(calcOutputString * (10**i)) / 10**i).toString();
+                calcOutputString = calcOutputString.toString()
+                console.log('second change: ' + calcOutputString);
+                console.log('parseInt(calcOutputString).toLocaleString(): ' + parseInt(calcOutputString).toLocaleString())
+                console.log('calcOutputString.slice(calcOutputString.indexOf("."): ' + calcOutputString.slice(calcOutputString.indexOf('.')));
+                calcOutputString = parseInt(calcOutputString).toLocaleString() + calcOutputString.slice(calcOutputString.indexOf('.'));
+                console.log('third change: ' + calcOutputString);
+                console.log('i = ' + i);
+                i--;
+            };    
+        };
+
+        // Changes number output to e notation if calcScreenMaxContentLength is exceeded
+        let i = calcScreenContentMaxLength;
+        while (calcOutputString.length > calcScreenContentMaxLength) {
+            calcOutputString = parseFloat(calcOutputString.replace(/,/g, ''));
+            calcOutputString = calcOutputString.toExponential(i);
+            
+
+            // To avoid calc screen number ending unnecessarily with e+0
+            if (calcOutputString[calcOutputString.indexOf('e+') + 2] === '0') {
+                calcOutputString = calcOutputString.slice(0, calcOutputString.indexOf('e+'));
+            };
+            
+            // To avoid calc screen number having unnecessary 0s preceding e+n
+            if (calcOutputString.includes('e+') && calcOutputString[calcOutputString.indexOf('e+') - 1] === '0') {
+                let exponentialAmount = calcOutputString.slice(calcOutputString.indexOf('e+'))
+                let numberAmount = calcOutputString.slice(0, calcOutputString.indexOf('e+'))
+                for (let i = numberAmount.length - 1; numberAmount[i] === '0' || numberAmount[i] === '.'; i--) {
+                    numberAmount = numberAmount.slice(0, -1);
+                };
+                calcOutputString = numberAmount + exponentialAmount;
+            };
+
+            i--;
+        };
+    };
+    
+    // Add the minus sign back in after taking it off to perform calcScreenMaxContentLength restrictions
+    if (!calcOutputString.includes('-') && isPositive === false) {
+        calcOutputString = '-' + calcOutputString;
     };
 
     calcScreen.textContent = calcOutputString;
@@ -126,20 +196,17 @@ function updateInputString(inputSelection) {
 
     // Update calcInputString when numbers are pressed
     } else if (typeof(inputSelection) === 'number') {
-        if (calcInputString.length >= maxInputStringLength) {
+        if (checkInputLengthExceeded()) {
             return;
         };
-        if (secondEquationTerm === true) {
-            calcInputString = inputSelection.toString();
-            equationCompleted = false
-            secondEquationTerm = false;
-            return;
-        } else if (equationCompleted === true) {
+        
+        if (secondEquationTerm === true || equationCompleted === true) {
             calcInputString = inputSelection.toString();
             equationCompleted = false
             secondEquationTerm = false;
             return;
         };
+
         if (calcInputString.charAt(0) === '0' && calcInputString.charAt(1) === '') {
             calcInputString = inputSelection.toString();
         } else if (calcInputString.charAt(0) === '-' && calcInputString.charAt(1) === '0' && calcInputString.charAt(2) === '') {
@@ -149,7 +216,11 @@ function updateInputString(inputSelection) {
         };
 
     } else if (inputSelection === 'decimal_point') {
-        if (calcInputString.length >= maxInputStringLength || calcInputString.indexOf('.') !== -1) {
+        if (checkInputLengthExceeded()) {
+            return;
+        };
+        
+        if (calcInputString.indexOf('.') !== -1) {
             return;
         };
         calcInputString += '.';
@@ -195,12 +266,8 @@ function processOperandInput(operatorType) {
         equationTermB = '';
         secondEquationTerm = true;
         return;
-    // } else if (equationTermA && !equationTermB && equationCompleted === false) {
-    //     processEqualsInput();
-    //     equationOperator = operatorType;
-    //     equationTermB = '';
-    //     return;
     };
+    
     secondEquationTerm = true;
     equationOperator = operatorType;
     equationTermA = parseFloat(calcInputString);
@@ -218,4 +285,16 @@ function processEqualsInput() {
     };    
     equationCompleted = true;
     
+};
+
+function checkInputLengthExceeded() {
+    // Condition 'secondEquationTerm === false' enables equationTermB to be entered when max length reached
+    if (calcInputString.length >= calcInputStringMaxLength && secondEquationTerm === false) {
+        if (calcInputString.includes('-') && calcInputString.length >= calcInputStringMaxLength + 1) {
+            return true;
+        } else if (!calcInputString.includes('-')) {
+            return true;
+        }
+    };
+    return false;
 };
