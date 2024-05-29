@@ -89,15 +89,16 @@ function updateScreen() {
         calcOutputString += calcInputString.slice(calcInputString.indexOf('.'));
     };
     
-    // Remove minus sign as this should be separate from calcScreenMaxContentLength
-    if (calcOutputString.includes('-')) {
-        calcOutputString = calcOutputString.replace('-', '');
-        console.log('minus removed: ' + calcOutputString)
-    };
-
     // Limit output length to prevent calc screen overflow
-    if (calcOutputString.length > calcScreenContentMaxLength) {
+    if (calcOutputString.replace('-', '').length > calcScreenContentMaxLength) {
         
+        // Remove minus sign as this should be separate from calcScreenMaxContentLength
+        let isNegative = calcOutputString.includes('-');
+        if (isNegative) {
+            calcOutputString = calcOutputString.replace('-', '');
+            console.log('minus removed');
+        };
+
         // Reduces the length of longer numbers by rounding the decimal places
         if (calcOutputString.includes('.') && !calcOutputString.endsWith('.')) {
             let i = calcOutputString.replace(/,/g, '').slice(calcOutputString.replace(/,/g, '').indexOf('.')).length - 2;
@@ -149,9 +150,14 @@ function updateScreen() {
 
             i--;
         };
+
+        // Add back minus sign after removing for calcScreenMaxContentLength restrictions
+        if (isNegative) {
+            calcOutputString = '-' + calcOutputString;
+            console.log('minus added back in');
+        };
     };
     
-    // Add the minus sign back in after taking it off to perform calcScreenMaxContentLength restrictions
     if (!calcOutputString.includes('-') && isPositive === false) {
         calcOutputString = '-' + calcOutputString;
     };
@@ -164,19 +170,22 @@ function updateInputString(inputSelection) {
         // Want backspace to set calc output number to 0 and remove minus sign/number negativity
         equationCompleted = false;
 
+        // Checks to prevent 0 and '-' being removed
         if (calcInputString.length === 2) {
             if (calcInputString.indexOf('-') === -1) {
                 calcInputString = calcInputString.slice(0, -1);
             } else {
                 calcInputString = '0';
                 isPositive = true;
-            }; // Next if checks to prevent 0 and '-' being removed
+            };         
         } else if (calcInputString.length > 1) { 
             calcInputString = calcInputString.slice(0, -1);
+        // After backspace all characters the calcInputString resets to 0 instead of going blank
         } else {
             calcInputString = '0';
         };
 
+        // Holds the new number created by using backspace and store it for next equation
         if (secondEquationTerm) {
             secondEquationTerm = false;
             updateScreen();
@@ -200,6 +209,7 @@ function updateInputString(inputSelection) {
             return;
         };
         
+        // Overwrites calcInputString with new number input after equation is evaluated
         if (secondEquationTerm === true || equationCompleted === true) {
             calcInputString = inputSelection.toString();
             equationCompleted = false
@@ -207,6 +217,7 @@ function updateInputString(inputSelection) {
             return;
         };
 
+        // Number should not start with 0 unless it is followed by a decimal point
         if (calcInputString.charAt(0) === '0' && calcInputString.charAt(1) === '') {
             calcInputString = inputSelection.toString();
         } else if (calcInputString.charAt(0) === '-' && calcInputString.charAt(1) === '0' && calcInputString.charAt(2) === '') {
@@ -220,10 +231,21 @@ function updateInputString(inputSelection) {
             return;
         };
         
+        // To handle first input after equation evaluation being the decimal point
+        if (secondEquationTerm === true || equationCompleted === true) {
+            calcInputString = '0.';
+            equationCompleted = false
+            secondEquationTerm = false;
+            return;
+        };
+
+        // To prevent more than 1 decimal from being added to input string
         if (calcInputString.indexOf('.') !== -1) {
             return;
         };
+
         calcInputString += '.';
+
     };
 };
 
