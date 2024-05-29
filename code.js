@@ -211,6 +211,8 @@ function updateInputString(inputSelection) {
         
         // Overwrites calcInputString with new number input after equation is evaluated
         if (secondEquationTerm === true || equationCompleted === true) {
+            console.log('clear and accept new number input');
+            isPositive = true;
             calcInputString = inputSelection.toString();
             equationCompleted = false
             secondEquationTerm = false;
@@ -233,6 +235,7 @@ function updateInputString(inputSelection) {
         
         // To handle first input after equation evaluation being the decimal point
         if (secondEquationTerm === true || equationCompleted === true) {
+            isPositive = true;
             calcInputString = '0.';
             equationCompleted = false
             secondEquationTerm = false;
@@ -251,11 +254,13 @@ function updateInputString(inputSelection) {
 
 function flipPositivity() {
     if (isPositive === true) {
+        if (!calcInputString.includes('-')) {
+            calcInputString = '-' + calcInputString;
+        };
         isPositive = false;
-        calcInputString = '-' + calcInputString;
     } else if (isPositive === false) {
+        calcInputString = calcInputString.replace(/-/g, '');
         isPositive = true;
-        calcInputString = calcInputString.replace('-', '');
     };
 };
 
@@ -276,6 +281,7 @@ function calculateEquation() {
             break;
     };
     secondEquationTerm = false;
+    isPositive = true;
     return answer;
 };
 
@@ -306,7 +312,6 @@ function processEqualsInput() {
         equationTermA = parseFloat(calcInputString);
     };    
     equationCompleted = true;
-    
 };
 
 function checkInputLengthExceeded() {
