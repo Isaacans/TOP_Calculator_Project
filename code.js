@@ -280,6 +280,7 @@ function calculateEquation() {
             answer = (equationTermA + equationTermB);
             break;
     };
+    equationTermA = '';
     secondEquationTerm = false;
     isPositive = true;
     return answer;
@@ -289,9 +290,11 @@ function processOperandInput(operatorType) {
     
     if (equationTermA && !equationTermB && secondEquationTerm === false ) {
         processEqualsInput();
+        console.log('operator first if called')
         updateScreen();
         equationOperator = operatorType;
         equationTermB = '';
+        equationTermA = parseFloat(calcInputString);
         secondEquationTerm = true;
         return;
     };
@@ -304,12 +307,17 @@ function processOperandInput(operatorType) {
 
 function processEqualsInput() {
     if (!equationTermB) {
+        console.log('add input to termB')
         equationTermB = parseFloat(calcInputString);
     };
+    
+    if (equationTermA === '') {
+        equationTermA = parseFloat(calcInputString);
+    };
+
     let outcome = calculateEquation();
     if (typeof(outcome) === 'number') {
         calcInputString = outcome.toString();
-        equationTermA = parseFloat(calcInputString);
     };    
     equationCompleted = true;
 };
