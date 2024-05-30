@@ -8,20 +8,90 @@ let equationOperator = '';
 let lastOperator = '';
 let equationCompleted = false;
 
-const calcScreenContentMaxLength = 16;
+const calcScreenContentMaxLength = 17;
 const calcInputStringMaxLength = calcScreenContentMaxLength + 4;
 const calcScreen = document.getElementById('calculator_screen');
 const calcBorder = document.getElementById('calculator_border');
 const buttons = document.querySelectorAll('button');
 
-// To detect user input via eventListener and calling all functions needed in response
+// To detect user input on button clicks via eventListener. Calls all functions needed in response
 calcBorder.addEventListener("click", (clickEvent) => {
     processUserInput(clickEvent.target.id);
     updateScreen();
 });
 
-function processUserInput(id) {
-    switch(id) {
+// Event listener to detect user input via keyboard. Calls all functions needed in response
+document.addEventListener("keydown", (keyDownEvent) => {
+    console.log(keyDownEvent.key);
+    processKeyboardInput(keyDownEvent.key);
+    updateScreen();
+});
+
+function processKeyboardInput(key) {
+    switch(key) {
+        case '1':
+            updateInputString(1);
+            break;
+        case '2':
+            updateInputString(2);
+            break;
+        case '3':
+            updateInputString(3);
+            break;
+        case '4':
+            updateInputString(4);
+            break;        
+        case '5':
+            updateInputString(5);
+            break;    
+        case '6':
+            updateInputString(6);
+            break;
+        case '7':
+            updateInputString(7);
+            break;    
+        case '8':
+            updateInputString(8);
+            break;    
+        case '9':
+            updateInputString(9);
+            break;    
+        case '0':
+            updateInputString(0);
+            break;  
+        case 'Escape':
+            updateInputString('AC')
+            break;        
+        case '_':
+            flipPositivity();
+            break;  
+        case 'Backspace':
+            updateInputString('backspace');
+            break;    
+        case '.':
+            updateInputString('decimal_point');
+            break;
+        case '/':
+            processOperandInput('divide');
+            break;  
+        case '*':
+            processOperandInput('times');
+            break;  
+        case '-': 
+            processOperandInput('minus');
+            break;  
+        case '+':
+            processOperandInput('plus');
+            break;    
+        case '=':
+        case 'Enter':
+            processEqualsInput();
+            break;    
+    };
+};
+
+function processUserInput(targetID) {
+    switch(targetID) {
         case 'one':
             updateInputString(1);
             break;
@@ -68,7 +138,7 @@ function processUserInput(id) {
         case 'times':
         case 'minus': 
         case 'plus':
-            processOperandInput(id);
+            processOperandInput(targetID);
             break;    
         case 'equals':
             processEqualsInput();
