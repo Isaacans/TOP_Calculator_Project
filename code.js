@@ -22,7 +22,6 @@ calcBorder.addEventListener("click", (clickEvent) => {
 
 // Event listener to detect user input via keyboard. Calls all functions needed in response
 document.addEventListener("keydown", (keyDownEvent) => {
-    console.log(keyDownEvent.key);
     processKeyboardInput(keyDownEvent.key);
     updateScreen();
 });
@@ -166,32 +165,22 @@ function updateScreen() {
         let isNegative = calcOutputString.includes('-');
         if (isNegative) {
             calcOutputString = calcOutputString.replace('-', '');
-            console.log('minus removed');
         };
 
         // Reduces the length of longer numbers by rounding the decimal places
         if (calcOutputString.includes('.') && !calcOutputString.endsWith('.')) {
             let i = calcOutputString.replace(/,/g, '').slice(calcOutputString.replace(/,/g, '').indexOf('.')).length - 2;
             
-            console.log('i = ' + i)
             if (i < 1) {
                 i = 1;
             };
 
             while (i > 0 && (calcOutputString.length) > calcScreenContentMaxLength) {
-                console.log('decimal while triggered with: ' + calcOutputString);
-                
                 calcOutputString = calcOutputString.replace(/,/g, '');
-                console.log('first change: ' + calcOutputString);
                 calcOutputString = parseFloat(calcOutputString);
                 calcOutputString = (Math.round(calcOutputString * (10**i)) / 10**i).toString();
                 calcOutputString = calcOutputString.toString()
-                console.log('second change: ' + calcOutputString);
-                console.log('parseInt(calcOutputString).toLocaleString(): ' + parseInt(calcOutputString).toLocaleString())
-                console.log('calcOutputString.slice(calcOutputString.indexOf("."): ' + calcOutputString.slice(calcOutputString.indexOf('.')));
                 calcOutputString = parseInt(calcOutputString).toLocaleString() + calcOutputString.slice(calcOutputString.indexOf('.'));
-                console.log('third change: ' + calcOutputString);
-                console.log('i = ' + i);
                 i--;
             };    
         };
@@ -224,7 +213,6 @@ function updateScreen() {
         // Add back minus sign after removing for calcScreenMaxContentLength restrictions
         if (isNegative) {
             calcOutputString = '-' + calcOutputString;
-            console.log('minus added back in');
         };
     };
     
@@ -281,7 +269,6 @@ function updateInputString(inputSelection) {
         
         // Overwrites calcInputString with new number input after equation is evaluated
         if (secondEquationTerm === true || equationCompleted === true) {
-            console.log('clear and accept new number input');
             isPositive = true;
             calcInputString = inputSelection.toString();
             equationCompleted = false
@@ -360,7 +347,6 @@ function processOperandInput(operatorType) {
     
     if (equationTermA && !equationTermB && secondEquationTerm === false ) {
         processEqualsInput();
-        console.log('operator first if called')
         updateScreen();
         equationOperator = operatorType;
         equationTermB = '';
@@ -377,7 +363,6 @@ function processOperandInput(operatorType) {
 
 function processEqualsInput() {
     if (!equationTermB) {
-        console.log('add input to termB')
         equationTermB = parseFloat(calcInputString);
     };
     
