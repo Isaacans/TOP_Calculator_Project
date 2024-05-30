@@ -48,7 +48,9 @@ button.operator {
 }
 
 .footnote {
-    font-style: italic;
+    margin-top: 10%;
     min-width: 225px;
     text-align: center;
+    font-family:'Courier New', Courier, monospace ;
+    font-size: 0.87em;;
 }
