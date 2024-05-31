@@ -10,8 +10,8 @@ let equationCompleted = false;
 
 const calcScreenContentMaxLength = 17;
 const calcInputStringMaxLength = calcScreenContentMaxLength + 4;
-const calcScreen = document.getElementById('calculator_screen');
-const calcBorder = document.getElementById('calculator_border');
+const calcScreen = document.getElementById('calculator-screen');
+const calcBorder = document.getElementById('calculator-border');
 const buttons = document.querySelectorAll('button');
 
 // To detect user input on button clicks via eventListener. Calls all functions needed in response
@@ -61,14 +61,14 @@ function processKeyboardInput(key) {
         case 'Escape':
             updateInputString('AC')
             break;        
-        case '_':
+        case '-':
             flipPositivity();
             break;  
         case 'Backspace':
             updateInputString('backspace');
             break;    
         case '.':
-            updateInputString('decimal_point');
+            updateInputString('decimal-point');
             break;
         case '/':
             processOperandInput('divide');
@@ -124,14 +124,14 @@ function processUserInput(targetID) {
         case 'AC':
             updateInputString('AC')
             break;        
-        case 'flip_positivity':
+        case 'flip-positivity':
             flipPositivity();
             break;    
         case 'backspace':
             updateInputString('backspace');
             break;    
-        case 'decimal_point':
-            updateInputString('decimal_point');
+        case 'decimal-point':
+            updateInputString('decimal-point');
             break;
         case 'divide':
         case 'times':
@@ -285,7 +285,7 @@ function updateInputString(inputSelection) {
             calcInputString += inputSelection;
         };
 
-    } else if (inputSelection === 'decimal_point') {
+    } else if (inputSelection === 'decimal-point') {
         if (checkInputLengthExceeded()) {
             return;
         };
