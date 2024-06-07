@@ -1,6 +1,15 @@
+html {
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 0px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
 button {
     flex: 1 1 25%;
     font-size: 1.5em;
+    color: black;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 button.number {
@@ -57,7 +66,7 @@ summary,
     border-color: rgb(35, 31, 44);
     border-width: 6px;
     min-height: 400px;
-    min-width: 280px;
+    min-width: 290px;
     max-width: 380px;
     margin: 30px;
     padding: 4px;
